@@ -1,0 +1,6 @@
+chat_model_name: qwen3-max
+
+api_key: sk-qepnktiklrojnwxtxyfzcjlrnnqttoqpowhpsqdtiquiurpi
+
+
+external_data_path: data/external/records.csv
