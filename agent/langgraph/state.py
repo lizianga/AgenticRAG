@@ -1,29 +1,36 @@
-from typing import List, Dict, Any, TypedDict, Sequence
+from typing import List, TypedDict
 from langchain_core.documents import Document
-from langchain_core.messages import BaseMessage
+
+
+class ChatMessage(TypedDict):
+    role: str
+    content: str
 
 
 class RagState(TypedDict):
-    """RAG系统状态定义"""
-    # 用户原始查询
+    """RAG 系统节点间传递的状态
+
+    字段分类：
+    - 输入：query, session_id, chat_history（由调用方设置）
+    - 流程控制：needs_retrieval, is_relevant, rewrite_count（由节点写入，路由逻辑读取）
+    - 检索管线：rewritten_query, retrieved_docs, relevance_score
+    - 输出：response, error
+    """
+    # --- 输入 ---
     query: str
-    # 重写后的查询
-    rewritten_query: str
-    # 检索到的文档
-    retrieved_docs: List[Document]
-    # 相关性评分
-    relevance_score: float
-    # 生成的回答
-    response: str
-    # 对话历史
-    chat_history: List[Dict[str, str]]
-    # 是否需要检索的标志
-    needs_retrieval: bool
-    # 检索结果是否相关的标志
-    is_relevant: bool
-    # 重写次数
-    rewrite_count: int
-    # 最大重写次数
-    max_rewrite_count: int
-    # 会话ID
     session_id: str
+    chat_history: List[ChatMessage]
+
+    # --- 流程控制 ---
+    needs_retrieval: bool
+    is_relevant: bool
+    rewrite_count: int
+
+    # --- 检索管线 ---
+    rewritten_query: str
+    retrieved_docs: List[Document]
+    relevance_score: float
+
+    # --- 输出 ---
+    response: str
+    error: str

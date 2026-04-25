@@ -54,10 +54,10 @@ class VectorStoreService():
         bm25_retriever = BM25Retriever.from_texts(all_docs)
         bm25_retriever.k = chroma_conf['k']
         
-        # 创建混合检索器
+        # 创建混合检索器（RRF 融合：按排名加权，无需关心各路分数量纲）
         hybrid_retriever = EnsembleRetriever(
             retrievers=[vector_retriever, bm25_retriever],
-            weights=[0.7, 0.3]  # 向量检索权重70%，关键词检索权重30%
+            c=60  # RRF 常数，score = 1/(c + rank)，60 是通用默认值
         )
         
         return hybrid_retriever
